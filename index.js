@@ -1,5 +1,6 @@
-require('dotenv').config();
+require("dotenv").config();
 
+const bcrypt = require("bcrypt");
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
@@ -37,47 +38,44 @@ app.post("/login", async (req, res) => {
   try {
     const user = await User.findOne({ email });
     if (!user) {
-      return res.json({ success: false, message: "Email not found", errorMessage: "email not found" })
+      return res.json({
+        success: false,
+        message: "Email not found",
+        errorMessage: "Email not found",
+      });
     }
-  if (user.password === password) {
-      res.json({ success: true, message: "Login success", user: { id: user._id, name: user.name, email: user.email, role: user.role} })
-    }
-    else {
-      res.json({ success: false, message: "Incorrect password" })
-    }
-  }
-  catch (error) {
-    res.json({ success: false, message: "email not found", errorMessage: error.message })
-  }
-})
+    const validPassword = await bcrypt.compare(password, user.password);
 
-app.post("/login", async (req, res) => {
-  const { email, password } = req.body;
-  console.log(req.body);
-  try {
-    const user = await User.findOne({ email });
-    if (!user) {
-      return res.json({ success: false, message: "Email not found", errorMessage: "email not found" })
+    if (validPassword) {
+      res.json({
+        success: true,
+        message: "Login success",
+        user: {
+          id: user._id,
+          name: user.name,
+          email: user.email,
+          role: user.role,
+        },
+      });
+    } else {
+      res.json({ success: false, message: "Invalid password" });
     }
-  if (user.password === password) {
-      res.json({ success: true, message: "Login success", user: { id: user._id, name: user.name, email: user.email, role: user.role} })
-    }
-    else {
-      res.json({ success: false, message: "Incorrect password" })
-    }
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: "User not found",
+      errorMessage: error.message,
+    });
   }
-  catch (error) {
-    res.json({ success: false, message: "email not found", errorMessage: error.message })
-  }
-})
+});
 
 // catching errors
 app.use(errorHandler);
 
 // 404 Handler
 app.use((req, res) => {
-  res.status(404).json({success: false, message: "Route not found"})
-}) 
+  res.status(404).json({ success: false, message: "Route not found" });
+});
 
 const PORT = process.env.PORT || 5050;
 app.listen(PORT, () => {
