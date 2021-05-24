@@ -1,5 +1,6 @@
 require("dotenv").config();
 
+const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const express = require("express");
 const bodyParser = require("body-parser");
@@ -47,6 +48,10 @@ app.post("/login", async (req, res) => {
     const validPassword = await bcrypt.compare(password, user.password);
 
     if (validPassword) {
+      const token = jwt.sign(
+        { userId: user._id, email: user.email },
+        process.env.JWT_SECRET
+      );
       res.json({
         success: true,
         message: "Login success",
@@ -56,6 +61,7 @@ app.post("/login", async (req, res) => {
           email: user.email,
           role: user.role,
         },
+        token,
       });
     } else {
       res.json({ success: false, message: "Invalid password" });

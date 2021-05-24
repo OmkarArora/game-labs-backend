@@ -1,9 +1,11 @@
 const express = require("express");
 const router = express.Router();
 const { extend } = require("lodash");
-const { paramLogger } = require("../middleware/middleware");
+const { paramLogger, authVerify } = require("../middleware/middleware");
 
 const { Playlist } = require("../models/playlist.model");
+
+router.use(authVerify);
 
 let playlistVideoRouter = express.Router({ mergeParams: true });
 router.use("/:playlistId/video", playlistVideoRouter)

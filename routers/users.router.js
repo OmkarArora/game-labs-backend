@@ -1,18 +1,19 @@
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 const express = require("express");
 const router = express.Router();
 const { extend } = require("lodash");
-const { paramLogger } = require("../middleware/middleware");
+const { paramLogger, authVerify } = require("../middleware/middleware");
 
 const { User } = require("../models/user.model");
 const { Playlist } = require("../models/playlist.model");
 const { Category } = require("../models/category.model");
 
 let userCategorySubscriptionsRouter = express.Router({ mergeParams: true });
-router.use("/:userId/category-subscriptions", userCategorySubscriptionsRouter);
+router.use("/:userId/category-subscriptions", authVerify, userCategorySubscriptionsRouter);
 
 let userPlaylistsRouter = express.Router({ mergeParams: true });
-router.use("/:userId/playlists", userPlaylistsRouter);
+router.use("/:userId/playlists", authVerify, userPlaylistsRouter);
 
 router.use("/:userId", paramLogger);
 
@@ -50,6 +51,11 @@ router
 
       const savedUser = await NewUser.save();
 
+      const token = jwt.sign(
+        { userId: user._id, email: user.email },
+        process.env.JWT_SECRET
+      );
+
       res.json({
         success: true,
         user: {
@@ -57,6 +63,7 @@ router
           email: savedUser.email,
           role: savedUser.role,
         },
+        token
       });
     } catch (error) {
       res
