@@ -10,10 +10,12 @@ const { Playlist } = require("../models/playlist.model");
 const { Category } = require("../models/category.model");
 
 let userCategorySubscriptionsRouter = express.Router({ mergeParams: true });
-router.use("/:userId/category-subscriptions", authVerify, userCategorySubscriptionsRouter);
+// router.use("/:userId/category-subscriptions", authVerify, userCategorySubscriptionsRouter);
+router.use("/:userId/category-subscriptions", userCategorySubscriptionsRouter);
 
 let userPlaylistsRouter = express.Router({ mergeParams: true });
-router.use("/:userId/playlists", authVerify, userPlaylistsRouter);
+// router.use("/:userId/playlists", authVerify, userPlaylistsRouter);
+router.use("/:userId/playlists", userPlaylistsRouter);
 
 router.use("/:userId", paramLogger);
 
