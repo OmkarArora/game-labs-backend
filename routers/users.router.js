@@ -10,12 +10,14 @@ const { Playlist } = require("../models/playlist.model");
 const { Category } = require("../models/category.model");
 
 let userCategorySubscriptionsRouter = express.Router({ mergeParams: true });
-// router.use("/:userId/category-subscriptions", authVerify, userCategorySubscriptionsRouter);
-router.use("/:userId/category-subscriptions", userCategorySubscriptionsRouter);
+router.use(
+  "/:userId/category-subscriptions",
+  authVerify,
+  userCategorySubscriptionsRouter
+);
 
 let userPlaylistsRouter = express.Router({ mergeParams: true });
-// router.use("/:userId/playlists", authVerify, userPlaylistsRouter);
-router.use("/:userId/playlists", userPlaylistsRouter);
+router.use("/:userId/playlists", authVerify, userPlaylistsRouter);
 
 router.use("/:userId", paramLogger);
 
@@ -28,13 +30,11 @@ router
       const users = await User.find({});
       res.json({ success: true, users });
     } catch (error) {
-      res
-        .status(500)
-        .json({
-          success: false,
-          message: "Unable to get users",
-          errorMessage: error.message,
-        });
+      res.status(500).json({
+        success: false,
+        message: "Unable to get users",
+        errorMessage: error.message,
+      });
     }
   })
   .post(async (req, res) => {
@@ -65,16 +65,14 @@ router
           email: savedUser.email,
           role: savedUser.role,
         },
-        token
+        token,
       });
     } catch (error) {
-      res
-        .status(500)
-        .json({
-          success: false,
-          message: "Unable to register user",
-          errorMessage: error.message,
-        });
+      res.status(500).json({
+        success: false,
+        message: "Unable to register user",
+        errorMessage: error.message,
+      });
     }
   });
 
@@ -155,13 +153,11 @@ userPlaylistsRouter
       .exec((error, user) => {
         if (error) {
           console.error(error);
-          return res
-            .status(500)
-            .json({
-              success: false,
-              message: "Error while retreiving playlists",
-              errorMessage: error.message,
-            });
+          return res.status(500).json({
+            success: false,
+            message: "Error while retreiving playlists",
+            errorMessage: error.message,
+          });
         }
         return res.json({ success: true, playlists: user.playlists });
       });
@@ -184,13 +180,11 @@ userPlaylistsRouter.route("/create").post(async (req, res) => {
     await user.save();
     res.json({ success: true, playlist: savedPlaylist });
   } catch (error) {
-    res
-      .status(500)
-      .json({
-        success: false,
-        message: "Unable to create playlist",
-        errorMessage: error.message,
-      });
+    res.status(500).json({
+      success: false,
+      message: "Unable to create playlist",
+      errorMessage: error.message,
+    });
   }
 });
 
@@ -208,13 +202,11 @@ userPlaylistsRouter.route("/delete").post(async (req, res) => {
       playlist,
     });
   } catch (error) {
-    res
-      .status(500)
-      .json({
-        success: false,
-        message: "error while deleting playlist",
-        errorMessage: error.message,
-      });
+    res.status(500).json({
+      success: false,
+      message: "error while deleting playlist",
+      errorMessage: error.message,
+    });
   }
 });
 
@@ -225,13 +217,11 @@ userCategorySubscriptionsRouter.route("/").get(async (req, res) => {
     .exec((error, user) => {
       if (error) {
         console.error(error);
-        return res
-          .status(500)
-          .json({
-            success: false,
-            message: "Error while retreiving user catgories",
-            errorMessage: error.message,
-          });
+        return res.status(500).json({
+          success: false,
+          message: "Error while retreiving user catgories",
+          errorMessage: error.message,
+        });
       }
       return res.json({
         success: true,
@@ -256,13 +246,11 @@ userCategorySubscriptionsRouter.route("/sub").post(async (req, res) => {
       category,
     });
   } catch (error) {
-    res
-      .status(500)
-      .json({
-        success: false,
-        message: "Error occurred while subscribing",
-        errorMessage: error.message,
-      });
+    res.status(500).json({
+      success: false,
+      message: "Error occurred while subscribing",
+      errorMessage: error.message,
+    });
   }
 });
 
@@ -281,13 +269,11 @@ userCategorySubscriptionsRouter.route("/unsub").post(async (req, res) => {
       category,
     });
   } catch (error) {
-    res
-      .status(500)
-      .json({
-        success: false,
-        message: "error while unsubbing",
-        errorMessage: error.message,
-      });
+    res.status(500).json({
+      success: false,
+      message: "error while unsubbing",
+      errorMessage: error.message,
+    });
   }
 });
 

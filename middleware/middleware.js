@@ -22,7 +22,7 @@ const authVerify = (req, res, next) => {
   console.log("Auth Token received: ", token);
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = { userId: decoded.userId, email: decoded.email };
+    req.userAuth = { userId: decoded.userId, email: decoded.email };
     return next();
   } catch (error) {
     return res.status(401).json({
