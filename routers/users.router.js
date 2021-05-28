@@ -79,7 +79,6 @@ router
 router.param("userId", async (req, res, next, userId) => {
   try {
     const user = await User.findById(userId);
-    console.log("User ID: ", userId);
     if (!user) {
       return res
         .status(400)
