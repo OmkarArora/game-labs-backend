@@ -24,7 +24,7 @@ router.use("/:userId", paramLogger);
 router
   .route("/")
   .get(async (req, res) => {
-    res.status(403).json({ success: false, message: "Not accessible" });
+    return res.status(403).json({ success: false, message: "Not accessible" });
     // TODO: user details shouldnt be accessible
     try {
       const users = await User.find({});

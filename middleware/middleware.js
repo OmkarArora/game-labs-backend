@@ -19,10 +19,11 @@ const paramLogger = (req, res, next) => {
 
 const authVerify = (req, res, next) => {
   const token = req.headers.authorization;
+  console.log("token received", token)
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.userAuth = { userId: decoded.userId, email: decoded.email };
-    if(decoded.userId !== String(req.user._id)){
+    if(req.user && decoded.userId !== String(req.user._id)){
       return res.status(401).json({
         success: false,
         message: "User authentication failed",
