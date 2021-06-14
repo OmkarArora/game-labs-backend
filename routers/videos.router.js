@@ -46,7 +46,7 @@ router.route("/:videoId")
     try {
       console.log("Params Checked", req.paramsChecked);
       const { video } = req;
-      video._v = undefined;
+      video.__v = undefined;
       res.json({ success: true, video });
     } catch (error) {
       return res.status(400).json({ success: false, message: "Error while retreiving video", errorMessage: error.message });
