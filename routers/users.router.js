@@ -128,45 +128,37 @@ router
     });
   });
 
-userPlaylistsRouter
-  .route("/")
-  .get((req, res) => {
-    const { userId } = req.params;
-    User.findById(userId)
-      .populate({
-        path: "playlists",
-        select: { _id: 1, title: 1, videos: 1 },
-        populate: {
-          path: "videos",
-          select: {
-            _id: 1,
-            title: 1,
-            category: 1,
-            thumbnail: 1,
-            video: 1,
-            description: 1,
-            runtime: 1,
-          },
+userPlaylistsRouter.route("/").get((req, res) => {
+  const { userId } = req.params;
+  User.findById(userId)
+    .populate({
+      path: "playlists",
+      select: { _id: 1, title: 1, videos: 1 },
+      populate: {
+        path: "videos",
+        select: {
+          _id: 1,
+          title: 1,
+          category: 1,
+          thumbnail: 1,
+          video: 1,
+          description: 1,
+          runtime: 1,
         },
-      })
-      .exec((error, user) => {
-        if (error) {
-          console.error(error);
-          return res.status(500).json({
-            success: false,
-            message: "Error while retreiving playlists",
-            errorMessage: error.message,
-          });
-        }
-        return res.json({ success: true, playlists: user.playlists });
-      });
-  })
-  .post(async (req, res) => {
-    const playlistUpdates = req.body;
-    let { user } = req;
-    let newdata = extend(user.playlists, playlistUpdates);
-    console.log(newdata);
-  });
+      },
+    })
+    .exec((error, user) => {
+      if (error) {
+        console.error(error);
+        return res.status(500).json({
+          success: false,
+          message: "Error while retreiving playlists",
+          errorMessage: error.message,
+        });
+      }
+      return res.json({ success: true, playlists: user.playlists });
+    });
+});
 
 userPlaylistsRouter.route("/create").post(async (req, res) => {
   try {
