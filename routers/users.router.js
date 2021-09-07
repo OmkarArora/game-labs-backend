@@ -160,6 +160,74 @@ userPlaylistsRouter.route("/").get((req, res) => {
     });
 });
 
+userPlaylistsRouter.route("/history").get((req, res) => {
+  const { userId } = req.params;
+  User.findById(userId)
+    .populate({
+      path: "history",
+      populate: {
+        path: "videos",
+        select: {
+          _id: 1,
+          title: 1,
+          category: 1,
+          thumbnail: 1,
+          video: 1,
+          description: 1,
+          runtime: 1,
+        },
+      },
+    })
+    .exec((error, user) => {
+      if (error) {
+        console.error(error);
+        return res.status(500).json({
+          success: false,
+          message: "Error while retreiving user history",
+          errorMessage: error.message,
+        });
+      }
+      return res.json({
+        success: true,
+        history: user.history ? user.history : {title: "History", videos: []},
+      });
+    });
+});
+
+userPlaylistsRouter.route("/watch-later").get((req, res) => {
+  const { userId } = req.params;
+  User.findById(userId)
+    .populate({
+      path: "watchLater",
+      populate: {
+        path: "videos",
+        select: {
+          _id: 1,
+          title: 1,
+          category: 1,
+          thumbnail: 1,
+          video: 1,
+          description: 1,
+          runtime: 1,
+        },
+      },
+    })
+    .exec((error, user) => {
+      if (error) {
+        console.error(error);
+        return res.status(500).json({
+          success: false,
+          message: "Error while retreiving watch later list",
+          errorMessage: error.message,
+        });
+      }
+      return res.json({
+        success: true,
+        watchLater: user.watchLater ? user.watchLater : {title: "Watch Later", videos: []},
+      });
+    });
+});
+
 userPlaylistsRouter.route("/create").post(async (req, res) => {
   try {
     // expected to send `title`

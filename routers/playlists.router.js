@@ -4,6 +4,7 @@ const { extend } = require("lodash");
 const { paramLogger, authVerify } = require("../middleware/middleware");
 
 const { Playlist } = require("../models/playlist.model");
+const { User } = require("../models/user.model");
 
 router.use(authVerify);
 
@@ -19,13 +20,11 @@ router
       const playlists = await Playlist.find({});
       res.json({ success: true, playlists });
     } catch (error) {
-      res
-        .status(500)
-        .json({
-          success: false,
-          message: "Unable to get playlists",
-          errorMessage: error.message,
-        });
+      res.status(500).json({
+        success: false,
+        message: "Unable to get playlists",
+        errorMessage: error.message,
+      });
     }
   })
   .post(async (req, res) => {
@@ -35,13 +34,11 @@ router
       const savedPlaylist = await NewPlaylist.save();
       res.json({ success: true, playlist: savedPlaylist });
     } catch (error) {
-      res
-        .status(500)
-        .json({
-          success: false,
-          message: "Unable to create playlist",
-          errorMessage: error.message,
-        });
+      res.status(500).json({
+        success: false,
+        message: "Unable to create playlist",
+        errorMessage: error.message,
+      });
     }
   });
 
@@ -72,13 +69,11 @@ router
       playlist._v = undefined;
       res.json({ success: true, playlist });
     } catch (error) {
-      return res
-        .status(400)
-        .json({
-          success: false,
-          message: "Error while retreiving playlist",
-          errorMessage: error.message,
-        });
+      return res.status(400).json({
+        success: false,
+        message: "Error while retreiving playlist",
+        errorMessage: error.message,
+      });
     }
   })
   .post(async (req, res) => {
@@ -90,13 +85,11 @@ router
       playlist.__v = undefined;
       res.json({ success: true, playlist });
     } catch (error) {
-      return res
-        .status(400)
-        .json({
-          success: false,
-          message: "Error while updating playlist",
-          errorMessage: error.message,
-        });
+      return res.status(400).json({
+        success: false,
+        message: "Error while updating playlist",
+        errorMessage: error.message,
+      });
     }
   })
   .delete(async (req, res) => {
@@ -110,13 +103,11 @@ router
         deleted: true,
       });
     } catch (error) {
-      return res
-        .status(400)
-        .json({
-          success: false,
-          message: "Error while deleting playlist",
-          errorMessage: error.message,
-        });
+      return res.status(400).json({
+        success: false,
+        message: "Error while deleting playlist",
+        errorMessage: error.message,
+      });
     }
   });
 
@@ -138,24 +129,20 @@ playlistVideoRouter.route("/add").post(async (req, res) => {
       .exec((error, playlist) => {
         if (error) {
           console.error(error);
-          return res
-            .status(500)
-            .json({
-              success: false,
-              message: "Error while retreiving playlists",
-              errorMessage: error.message,
-            });
+          return res.status(500).json({
+            success: false,
+            message: "Error while retreiving playlists",
+            errorMessage: error.message,
+          });
         }
         return res.json({ success: true, playlist });
       });
   } catch (error) {
-    return res
-      .status(400)
-      .json({
-        success: false,
-        message: "Error while adding video to playlist",
-        errorMessage: error.message,
-      });
+    return res.status(400).json({
+      success: false,
+      message: "Error while adding video to playlist",
+      errorMessage: error.message,
+    });
   }
 });
 
@@ -171,24 +158,20 @@ playlistVideoRouter.route("/delete").post(async (req, res) => {
       .exec((error, playlist) => {
         if (error) {
           console.error(error);
-          return res
-            .status(500)
-            .json({
-              success: false,
-              message: "Error while retreiving playlists",
-              errorMessage: error.message,
-            });
+          return res.status(500).json({
+            success: false,
+            message: "Error while retreiving playlists",
+            errorMessage: error.message,
+          });
         }
         return res.json({ success: true, playlist });
       });
   } catch (error) {
-    return res
-      .status(400)
-      .json({
-        success: false,
-        message: "Error while deleting the video from playlist",
-        errorMessage: error.message,
-      });
+    return res.status(400).json({
+      success: false,
+      message: "Error while deleting the video from playlist",
+      errorMessage: error.message,
+    });
   }
 });
 

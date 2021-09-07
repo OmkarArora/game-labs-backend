@@ -45,6 +45,14 @@ const UserSchema = new mongoose.Schema(
         ref: "Playlist",
       },
     ],
+    history: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Playlist",
+    },
+    watchLater: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Playlist",
+    },
   },
   {
     timestamps: true,

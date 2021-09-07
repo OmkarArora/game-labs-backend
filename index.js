@@ -20,6 +20,9 @@ initDBConnection();
 const usersRouter = require("./routers/users.router");
 app.use("/users", usersRouter);
 
+const userFixedPlaylists = require("./routers/user-fixed-playlists.router");
+app.use("/user-fixed-playlists", userFixedPlaylists);
+
 const playlistsRouter = require("./routers/playlists.router");
 app.use("/playlists", playlistsRouter);
 
